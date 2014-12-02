@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <com.gtotek.wordsearch.WordsearchGridView
+        android:id="@+id/grd_wordsearch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100dp"
+        android:layout_marginTop="70dp" >
+    </com.gtotek.wordsearch.WordsearchGridView>
+
+    <GridView
+        android:id="@+id/grd_word_list"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/roundedrectangle1"
+        android:numColumns="3" >
+    </GridView>
+
+</RelativeLayout>
