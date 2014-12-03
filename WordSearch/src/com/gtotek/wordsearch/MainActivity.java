@@ -16,10 +16,13 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.gtotek.dao.WordDAO;
 import com.gtotek.wordsearch.WordsearchGridView.OnWordSelectedListener;
 
 public class MainActivity extends Activity implements OnWordSelectedListener {
 	private Context mContext = this;
+	
+	private WordDAO mWordDAO;
 
 	private WordsearchGridView mWordsearchGridView;
 	private GridView mGrvWord;
@@ -85,6 +88,10 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 	}
 
 	private void initUI() {
+		mWordDAO = new WordDAO(mContext);
+		
+		mWordList =  mWordDAO.getRndWordEntity(1);
+		
 		mWordsearchGridView = (WordsearchGridView) this
 				.findViewById(R.id.grd_wordsearch);
 		mWordsearchGridView.setOnWordSelectedListener(this);
@@ -337,7 +344,7 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 		}
 		
 		
-		Toast.makeText(mContext,mFoundWords.size() +"  -  "+ mSolution.size(), 2000).show();
+		 
 
 		if (mFoundWords.size() == mSolution.size()) {
 			onPuzzleComplete();

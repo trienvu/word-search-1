@@ -503,13 +503,13 @@ public class WordsearchGridView extends LinearLayout implements OnKeyListener {
 		canvas.restore();
 	}
 
-	private int getInverseColor(int color) {
-		int red = Color.red(color);
-		int green = Color.green(color);
-		int blue = Color.blue(color);
-		int alpha = Color.alpha(color);
-		return Color.argb(alpha, 255 - red, 255 - green, 255 - blue);
-	}
+//	private int getInverseColor(int color) {
+//		int red = Color.red(color);
+//		int green = Color.green(color);
+//		int blue = Color.blue(color);
+//		int alpha = Color.alpha(color);
+//		return Color.argb(alpha, 255 - red, 255 - green, 255 - blue);
+//	}
 
 	private List<View> getSelectionViews() {
 		if (mSelStartPosition == null || mSelectionSteps == null
