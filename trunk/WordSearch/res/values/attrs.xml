@@ -5,5 +5,9 @@
         <attr name="android:numColumns" />
         
     </declare-styleable>
+    
+      <declare-styleable name="MyTextView">
+        <attr name="fontName" format="string" />
+    </declare-styleable>
 
 </resources>
