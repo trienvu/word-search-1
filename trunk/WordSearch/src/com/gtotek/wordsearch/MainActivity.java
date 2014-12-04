@@ -16,61 +16,94 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.gtotek.adapter.WordAdapter;
 import com.gtotek.dao.WordDAO;
+import com.gtotek.entity.CategoryEntity;
 import com.gtotek.wordsearch.WordsearchGridView.OnWordSelectedListener;
 
 public class MainActivity extends Activity implements OnWordSelectedListener {
 	private Context mContext = this;
-	
+
 	private WordDAO mWordDAO;
 
 	private WordsearchGridView mWordsearchGridView;
 	private GridView mGrvWord;
-	private WordListAdapter mWordAdapter;
+	private WordAdapter mWordAdapter;
 
 	private int mRows = 8;
 	private int mColumns = 8;
 
-	private static String[] mWordList = { "YES", "WONDROUS", "WONDERFUL", "WONDER", "WITH", "WILLING", "WHOLE",
-		"WELL", "WEALTHY", "VOYAGE", "VIVACIOUS", "VITAL", "VISUALIZE", "VISION", "VIGOROUS", "VICTORY", "VIBRANT",
-		"VENERATED", "VARY", "VALUED", "UPBEAT", "UNWAVERING", "UNUSUAL", "UNITY", "UNIQUE", "UNDERSTANDING", "TRUTH", "TRUSTFUL",
-		"TRIUMPH", "TRANSFORM", "TRANQUIL", "TOGETHER", "TODAY", "TIED", "THRIVE", "THOROUGH", "THIS", "THERAPEUTIC",
-		"THANKFUL", "TEAM", "TAKE", "SYNCHRONIZED", "SUSTAIN", "SURE", "SUPPORT", "SUNNY", "SUCCESS", "STYLE", "STUPENDOUS",
-		"STUNNING", "STRONG", "STIRRING", "STIR", "STEADY", "STABLE", "SPONTANEOUS", "SPLENDID", "SPIRIT", "SPARKLING",
-		"SOUL", "SOLUTION", "SMOOTH", "SMILE", "SMART", "SINCERE", "SIMPLE", "SILENCE", "SHOWN", "SHINE", "SHIFT", "SERENITY",
-		"SENSATIONAL", "SENSATION", "SELFLESS", "SECURE", "SAFE", "ROUSING", "ROBUST", "RICH", "REWARDING", "REVOLUTIONIZE",
-		"REVERED", "RESTORE", "RESPECT", "RESOURCES", "RESOUND", "RESOLUTION", "REPLENISHED", "RENOWNED", "RENEW",
-		"REMARKABLE", "RELY", "RELAX", "REJUVENATE", "REJOICE", "REFRESH", "REFINEMENT", "RECOGNIZED", "REALIZE", "READY", "QUIET",
-		"QUICK-MINDED", "QUICK", "QUEST", "PURPOSE", "PROUD", "PROTECT", "PROSPEROUS", "PROMINENT", "PROJECT", "PRODUCTIVE",
-		"PRINCIPLE", "PRETTY", "PREPARED", "POWERFUL", "POSITIVE", "POPULAR", "POLISH", "POISE", "POETIC", "PLETHORA", "PLENTY",
-		"PLENTEOUS", "PLEASURE", "PHENOMENON", "PERSISTENT", "PERFECT", "PERCEPTIVE", "PEACEFUL", "PEACE", "PASSIONATE", "PARTY",
-		"PARADISE", "ORIGINAL", "OPTIMISTIC", "OPENHANDED", "OPEN", "NURTURE", "NOVEL", "NOURISH", "NATURE", "MOVING",
-		"MOTIVATE", "MOMENT", "MODIFY", "MISSION", "MIRACLE", "METAMORPHOSIS", "MEND", "MEDITATE", "MEANINGFUL",
-		"MASTER", "MARVELOUS", "MAKE", "MAJESTIC", "MAINTAIN", "MAGNANIMOUS", "LUMINOUS", "LUCRATIVE", "LUCIDITY", "LOYAL",
-		"LOVELINESS", "LOVE", "LIVELY", "LEGENDARY", "LEARN", "LEADER", "LAUGH", "KNOW", "KISS", "KINDHEARTED",
-		"KIND", "KEEN", "JUBILATION", "JOVIAL", "JOINED", "JAZZED", "INVENTIVE", "INTUITIVE", "INTELLIGENT", "INTELLECTUAL",
-		"INSTINCT", "INSTANTANEOUS", "INSPIRE", "INNOVATE", "INNATE", "INGENIOUS", "INDEPENDENT", "INCREASE", "INCOMPARABLE",
-		"IMPECCABLE", "IMMENSE", "IMMACULATE", "IMAGINATIVE", "IDEAL", "HONORED", "HONEST", "HOLY", "HIGHEST", "HERE",
-		"HELPFUL", "HEAVENLY", "HEART", "HEALTHY", "HEALED", "HARMONY", "HAPPY", "HANDSOME", "GUTSY", "GROW", "GRIN",
-		"GREGARIOUS", "GREEN", "GRATITUDE", "GRACIOUS", "GRACEFUL", "GRACE", "GORGEOUS", "GOOD", "GLOW", "GLAD", "GIVE", "GIFTED",
-		"GENUINE", "GENIUS", "GENEROUS", "GATHER", "FUNNY", "FULL", "FRIENDLY", "FREEDOM", "FORTUNATE", "FOLLOW", "FLOURISH",
-		"FLEXIBLE", "FEAT", "FASCINATING", "FAMOUS", "FAMILY", "FAITH", "EXULTANT", "EXTRAORDINARY", "EXQUISITE", "EXPRESSIVE",
-		"EXPRESS", "EXPLORE", "EXPAND", "EXHILARATING", "EXCITED", "EVERYONE", "ESTEEM", "ESTABLISHED", "ESSENCE",
-		"EQUITABLE", "ENTIRELY", "ENTHUSE", "ENTERTAINING", "ENORMOUSLY", "ENJOY", "ENGAGING", "ENERGY", "ENERGETIC", "ENDORSE",
-		"ENCOURAGE", "ENCOMPASSING", "EMPATHETIC", "EMBRACE", "ELOQUENT", "ELEGANCE", "ELECTRIFYING", "EFFORTLESS", "EFFICIENT",
-		"EFFERVESCENT", "EFFECTIVE", "ECSTASY", "EASY", "EARNEST", "EAGER", "EACH", "DOUBT", "DONATE", "DIVINE", "DISTINGUISHED",
-		"DISCOVER", "DISCIPLINED", "DIRECT", "DETERMINED", "DESERVING", "DELIGHT", "DEDICATED", "DAZZLING", "CUTE",
-		"CURE", "CULTIVATE", "CUDDLE", "CREATE", "COURTEOUS", "COURAGEOUS", "COUPLED", "CORE", "COPIOUS", "CONVICTION", "CONTENT",
-		"CONSTANT", "CONSCIOUS", "CONNECT", "CONGENIAL", "CONFIDENT", "COMRADESHIP", "COMPLETE", "COMPASSIONATE",
-		"COMPANIONSHIP", "COMMEND", "COMFORTABLE", "CLOSENESS", "CLEVER", "CLEAN", "CLASSY", "CLARITY", "CHOOSE", "CHERISH",
-		"CHEERFUL", "CHARMING", "CHARITABLE", "CHARISMATIC", "CHARACTER", "CHANGE", "CERTAIN", "CELEBRATE", "CARING", "CAPTIVATING",
-		"CALM", "BURGEON", "BUNCH", "BUBBLY", "BRILLIANT", "BRIGHT", "BRAVE", "BOUNTY", "BOLD", "BLOOM", "BLISS", "BLESSED",
-		"BIGHEARTED", "BENEVOLENT", "BENEFIT", "BELIEVE", "BEAUTIFUL", "BEAMING", "BASIC", "AUTHENTIC", "ATTRACTIVE", "ATTENTIVE",
-		"ASTUTE", "ASTOUNDING", "ASTONISH", "ASSERTIVE", "ARTISTIC", "ARTICULATE", "APTITUDE", "APPROVE", "APPRECIATION", "ANSWER",
-		"ANIMATED", "AMUSING", "AMITY", "AMAZE", "ALTER", "ALLOW", "ALLIANCE", "ALIVE", "AIRY", "AGREE", "AFFLUENT", "AFFIRMATIVE",
-		"AFFIRM", "ADVENTURE", "ADORED", "ADOPT", "ADMIRE", "ADJUST", "ACUMEN", "ACTIVE", "ACHIEVEMENT", "ACCOMPLISHED", "ACCLAIMED",
-		"ACCEPT", "ABUNDANT", "ABSOLUTELY"
-};
+	private static String[] mWordList = { "YES", "WONDROUS", "WONDERFUL",
+			"WONDER", "WITH", "WILLING", "WHOLE", "WELL", "WEALTHY", "VOYAGE",
+			"VIVACIOUS", "VITAL", "VISUALIZE", "VISION", "VIGOROUS", "VICTORY",
+			"VIBRANT", "VENERATED", "VARY", "VALUED", "UPBEAT", "UNWAVERING",
+			"UNUSUAL", "UNITY", "UNIQUE", "UNDERSTANDING", "TRUTH", "TRUSTFUL",
+			"TRIUMPH", "TRANSFORM", "TRANQUIL", "TOGETHER", "TODAY", "TIED",
+			"THRIVE", "THOROUGH", "THIS", "THERAPEUTIC", "THANKFUL", "TEAM",
+			"TAKE", "SYNCHRONIZED", "SUSTAIN", "SURE", "SUPPORT", "SUNNY",
+			"SUCCESS", "STYLE", "STUPENDOUS", "STUNNING", "STRONG", "STIRRING",
+			"STIR", "STEADY", "STABLE", "SPONTANEOUS", "SPLENDID", "SPIRIT",
+			"SPARKLING", "SOUL", "SOLUTION", "SMOOTH", "SMILE", "SMART",
+			"SINCERE", "SIMPLE", "SILENCE", "SHOWN", "SHINE", "SHIFT",
+			"SERENITY", "SENSATIONAL", "SENSATION", "SELFLESS", "SECURE",
+			"SAFE", "ROUSING", "ROBUST", "RICH", "REWARDING", "REVOLUTIONIZE",
+			"REVERED", "RESTORE", "RESPECT", "RESOURCES", "RESOUND",
+			"RESOLUTION", "REPLENISHED", "RENOWNED", "RENEW", "REMARKABLE",
+			"RELY", "RELAX", "REJUVENATE", "REJOICE", "REFRESH", "REFINEMENT",
+			"RECOGNIZED", "REALIZE", "READY", "QUIET", "QUICK-MINDED", "QUICK",
+			"QUEST", "PURPOSE", "PROUD", "PROTECT", "PROSPEROUS", "PROMINENT",
+			"PROJECT", "PRODUCTIVE", "PRINCIPLE", "PRETTY", "PREPARED",
+			"POWERFUL", "POSITIVE", "POPULAR", "POLISH", "POISE", "POETIC",
+			"PLETHORA", "PLENTY", "PLENTEOUS", "PLEASURE", "PHENOMENON",
+			"PERSISTENT", "PERFECT", "PERCEPTIVE", "PEACEFUL", "PEACE",
+			"PASSIONATE", "PARTY", "PARADISE", "ORIGINAL", "OPTIMISTIC",
+			"OPENHANDED", "OPEN", "NURTURE", "NOVEL", "NOURISH", "NATURE",
+			"MOVING", "MOTIVATE", "MOMENT", "MODIFY", "MISSION", "MIRACLE",
+			"METAMORPHOSIS", "MEND", "MEDITATE", "MEANINGFUL", "MASTER",
+			"MARVELOUS", "MAKE", "MAJESTIC", "MAINTAIN", "MAGNANIMOUS",
+			"LUMINOUS", "LUCRATIVE", "LUCIDITY", "LOYAL", "LOVELINESS", "LOVE",
+			"LIVELY", "LEGENDARY", "LEARN", "LEADER", "LAUGH", "KNOW", "KISS",
+			"KINDHEARTED", "KIND", "KEEN", "JUBILATION", "JOVIAL", "JOINED",
+			"JAZZED", "INVENTIVE", "INTUITIVE", "INTELLIGENT", "INTELLECTUAL",
+			"INSTINCT", "INSTANTANEOUS", "INSPIRE", "INNOVATE", "INNATE",
+			"INGENIOUS", "INDEPENDENT", "INCREASE", "INCOMPARABLE",
+			"IMPECCABLE", "IMMENSE", "IMMACULATE", "IMAGINATIVE", "IDEAL",
+			"HONORED", "HONEST", "HOLY", "HIGHEST", "HERE", "HELPFUL",
+			"HEAVENLY", "HEART", "HEALTHY", "HEALED", "HARMONY", "HAPPY",
+			"HANDSOME", "GUTSY", "GROW", "GRIN", "GREGARIOUS", "GREEN",
+			"GRATITUDE", "GRACIOUS", "GRACEFUL", "GRACE", "GORGEOUS", "GOOD",
+			"GLOW", "GLAD", "GIVE", "GIFTED", "GENUINE", "GENIUS", "GENEROUS",
+			"GATHER", "FUNNY", "FULL", "FRIENDLY", "FREEDOM", "FORTUNATE",
+			"FOLLOW", "FLOURISH", "FLEXIBLE", "FEAT", "FASCINATING", "FAMOUS",
+			"FAMILY", "FAITH", "EXULTANT", "EXTRAORDINARY", "EXQUISITE",
+			"EXPRESSIVE", "EXPRESS", "EXPLORE", "EXPAND", "EXHILARATING",
+			"EXCITED", "EVERYONE", "ESTEEM", "ESTABLISHED", "ESSENCE",
+			"EQUITABLE", "ENTIRELY", "ENTHUSE", "ENTERTAINING", "ENORMOUSLY",
+			"ENJOY", "ENGAGING", "ENERGY", "ENERGETIC", "ENDORSE", "ENCOURAGE",
+			"ENCOMPASSING", "EMPATHETIC", "EMBRACE", "ELOQUENT", "ELEGANCE",
+			"ELECTRIFYING", "EFFORTLESS", "EFFICIENT", "EFFERVESCENT",
+			"EFFECTIVE", "ECSTASY", "EASY", "EARNEST", "EAGER", "EACH",
+			"DOUBT", "DONATE", "DIVINE", "DISTINGUISHED", "DISCOVER",
+			"DISCIPLINED", "DIRECT", "DETERMINED", "DESERVING", "DELIGHT",
+			"DEDICATED", "DAZZLING", "CUTE", "CURE", "CULTIVATE", "CUDDLE",
+			"CREATE", "COURTEOUS", "COURAGEOUS", "COUPLED", "CORE", "COPIOUS",
+			"CONVICTION", "CONTENT", "CONSTANT", "CONSCIOUS", "CONNECT",
+			"CONGENIAL", "CONFIDENT", "COMRADESHIP", "COMPLETE",
+			"COMPASSIONATE", "COMPANIONSHIP", "COMMEND", "COMFORTABLE",
+			"CLOSENESS", "CLEVER", "CLEAN", "CLASSY", "CLARITY", "CHOOSE",
+			"CHERISH", "CHEERFUL", "CHARMING", "CHARITABLE", "CHARISMATIC",
+			"CHARACTER", "CHANGE", "CERTAIN", "CELEBRATE", "CARING",
+			"CAPTIVATING", "CALM", "BURGEON", "BUNCH", "BUBBLY", "BRILLIANT",
+			"BRIGHT", "BRAVE", "BOUNTY", "BOLD", "BLOOM", "BLISS", "BLESSED",
+			"BIGHEARTED", "BENEVOLENT", "BENEFIT", "BELIEVE", "BEAUTIFUL",
+			"BEAMING", "BASIC", "AUTHENTIC", "ATTRACTIVE", "ATTENTIVE",
+			"ASTUTE", "ASTOUNDING", "ASTONISH", "ASSERTIVE", "ARTISTIC",
+			"ARTICULATE", "APTITUDE", "APPROVE", "APPRECIATION", "ANSWER",
+			"ANIMATED", "AMUSING", "AMITY", "AMAZE", "ALTER", "ALLOW",
+			"ALLIANCE", "ALIVE", "AIRY", "AGREE", "AFFLUENT", "AFFIRMATIVE",
+			"AFFIRM", "ADVENTURE", "ADORED", "ADOPT", "ADMIRE", "ADJUST",
+			"ACUMEN", "ACTIVE", "ACHIEVEMENT", "ACCOMPLISHED", "ACCLAIMED",
+			"ACCEPT", "ABUNDANT", "ABSOLUTELY" };
 
 	private final Direction[] mDirections = Direction.values();
 	private boolean[][] mLock;
@@ -88,10 +121,13 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 	}
 
 	private void initUI() {
+		Bundle bundle = getIntent().getExtras();
+		CategoryEntity categoryEntity = (CategoryEntity)bundle
+				.getSerializable(Define.KEY_CATEGORY);
 		mWordDAO = new WordDAO(mContext);
-		
-		mWordList =  mWordDAO.getRndWordEntity(1);
-		
+
+		mWordList = mWordDAO.getRndWordEntity(categoryEntity.getId());
+
 		mWordsearchGridView = (WordsearchGridView) this
 				.findViewById(R.id.grd_wordsearch);
 		mWordsearchGridView.setOnWordSelectedListener(this);
@@ -342,31 +378,27 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 				break;
 			}
 		}
-		
-		
-		 
 
 		if (mFoundWords.size() == mSolution.size()) {
 			onPuzzleComplete();
 		}
 	}
-	
+
 	private void initBoard() {
 		// TODO Auto-generated method stub
 		mWordsearchGridView.setBoard(mBoard);
 
 		List<Word> sortedWords = new ArrayList<Word>(mSolution);
 		Collections.sort(sortedWords);
-		mWordAdapter = new WordListAdapter(mContext, sortedWords);
+		mWordAdapter = new WordAdapter(mContext, sortedWords);
 		mWordAdapter.setWordsFound(mFoundWords);
 
 		mGrvWord = (GridView) findViewById(R.id.grd_word_list);
 		mGrvWord.setAdapter(mWordAdapter);
-		mGrvWord.setEnabled(false);
-		mGrvWord.setFocusable(false);
+	 
 	}
 
-	private void onPuzzleComplete() { 
+	private void onPuzzleComplete() {
 		AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
 		fadeOut.setFillAfter(true);
 		fadeOut.setDuration(500);
@@ -387,7 +419,6 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 				mWordsearchGridView.startAnimation(anim);
 			}
 
-			
 		});
 		mWordsearchGridView.startAnimation(fadeOut);
 
@@ -405,8 +436,9 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 			public void onAnimationEnd(Animation animation) {
 				mGrvWord.startLayoutAnimation();
 			}
-		}); 
+		});
 
-		Toast.makeText(mContext, "Puzzle complete, well done!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(mContext, "Puzzle complete, well done!",
+				Toast.LENGTH_SHORT).show();
 	}
 }
