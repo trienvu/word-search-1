@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- XXHDPI -->
+    <!-- Category -->
+    <dimen name="category_mar_top">230dp</dimen>
+    <dimen name="category_mar_ver_spacing">20dp</dimen>
+    
+    <!-- Play Game -->
+    <dimen name="play_margin_top_grid_top">80dp</dimen>
+    <dimen name="play_margin_left_right_grid_top">20dp</dimen>
+    
+    <dimen name="play_spacing_grid_bottom">5dp</dimen>
+    <dimen name="play_padd_grid_bottom">7dp</dimen>
+</resources>
