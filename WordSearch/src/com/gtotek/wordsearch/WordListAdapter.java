@@ -7,16 +7,13 @@ import java.util.Set;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
-public class WordListAdapter extends BaseAdapter implements ListAdapter {
+public class WordListAdapter extends BaseAdapter     {
 
 	private Context mContext;
 	private List<Word> mWords;
@@ -36,15 +33,7 @@ public class WordListAdapter extends BaseAdapter implements ListAdapter {
 
 	}
 
-	@Override
-	public boolean areAllItemsEnabled() {
-		return false;
-	}
-
-	@Override
-	public boolean isEnabled(int position) {
-		return false;
-	}
+	   
 
 	public void setWordsFound(Collection<Word> words) {
 		mFoundWords.addAll(words);
@@ -72,19 +61,19 @@ public class WordListAdapter extends BaseAdapter implements ListAdapter {
 		
 		Word word = (Word) getItem(position);
 		TextView tv = (TextView) v.findViewById(R.id.lbl_word);
-		v.setFocusable(false);
-		tv.setFocusable(false);
+//		v.setFocusable(false);
+//		tv.setFocusable(false);
 		String wordStr = word.getWord().toLowerCase();
 		wordStr = wordStr.substring(0, 1).toUpperCase() + wordStr.substring(1);
 		tv.setText(wordStr);
 		if (!mFoundWords.contains(word)) {
 			tv.setTextColor(Color.parseColor("#3a3a3a"));
-			tv.setTypeface(Typeface.DEFAULT_BOLD);
-			tv.setPaintFlags(tv.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+//			tv.setTypeface(Typeface.DEFAULT_BOLD);
+//			tv.setPaintFlags(tv.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
 		} else {
 			tv.setTextColor(Color.parseColor("#FF0000"));
-			tv.setTypeface(Typeface.DEFAULT);
-			tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//			tv.setTypeface(Typeface.DEFAULT);
+//			tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 		}
 
 		return v;
