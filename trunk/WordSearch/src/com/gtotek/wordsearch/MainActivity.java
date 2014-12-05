@@ -8,20 +8,116 @@ import java.util.Random;
 import java.util.Set;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.GridView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gtotek.adapter.WordAdapter;
 import com.gtotek.dao.WordDAO;
 import com.gtotek.entity.CategoryEntity;
+import com.gtotek.util.SharedPreferencesUtil;
 import com.gtotek.wordsearch.WordsearchGridView.OnWordSelectedListener;
 
 public class MainActivity extends Activity implements OnWordSelectedListener {
+	private static String[] mWordList = { "YES", "WONDROUS", "WONDERFUL",
+		"WONDER", "WITH", "WILLING", "WHOLE", "WELL", "WEALTHY", "VOYAGE",
+		"VIVACIOUS", "VITAL", "VISUALIZE", "VISION", "VIGOROUS", "VICTORY",
+		"VIBRANT", "VENERATED", "VARY", "VALUED", "UPBEAT", "UNWAVERING",
+		"UNUSUAL", "UNITY", "UNIQUE", "UNDERSTANDING", "TRUTH", "TRUSTFUL",
+		"TRIUMPH", "TRANSFORM", "TRANQUIL", "TOGETHER", "TODAY", "TIED",
+		"THRIVE", "THOROUGH", "THIS", "THERAPEUTIC", "THANKFUL", "TEAM",
+		"TAKE", "SYNCHRONIZED", "SUSTAIN", "SURE", "SUPPORT", "SUNNY",
+		"SUCCESS", "STYLE", "STUPENDOUS", "STUNNING", "STRONG", "STIRRING",
+		"STIR", "STEADY", "STABLE", "SPONTANEOUS", "SPLENDID", "SPIRIT",
+		"SPARKLING", "SOUL", "SOLUTION", "SMOOTH", "SMILE", "SMART",
+		"SINCERE", "SIMPLE", "SILENCE", "SHOWN", "SHINE", "SHIFT",
+		"SERENITY", "SENSATIONAL", "SENSATION", "SELFLESS", "SECURE",
+		"SAFE", "ROUSING", "ROBUST", "RICH", "REWARDING", "REVOLUTIONIZE",
+		"REVERED", "RESTORE", "RESPECT", "RESOURCES", "RESOUND",
+		"RESOLUTION", "REPLENISHED", "RENOWNED", "RENEW", "REMARKABLE",
+		"RELY", "RELAX", "REJUVENATE", "REJOICE", "REFRESH", "REFINEMENT",
+		"RECOGNIZED", "REALIZE", "READY", "QUIET", "QUICK-MINDED", "QUICK",
+		"QUEST", "PURPOSE", "PROUD", "PROTECT", "PROSPEROUS", "PROMINENT",
+		"PROJECT", "PRODUCTIVE", "PRINCIPLE", "PRETTY", "PREPARED",
+		"POWERFUL", "POSITIVE", "POPULAR", "POLISH", "POISE", "POETIC",
+		"PLETHORA", "PLENTY", "PLENTEOUS", "PLEASURE", "PHENOMENON",
+		"PERSISTENT", "PERFECT", "PERCEPTIVE", "PEACEFUL", "PEACE",
+		"PASSIONATE", "PARTY", "PARADISE", "ORIGINAL", "OPTIMISTIC",
+		"OPENHANDED", "OPEN", "NURTURE", "NOVEL", "NOURISH", "NATURE",
+		"MOVING", "MOTIVATE", "MOMENT", "MODIFY", "MISSION", "MIRACLE",
+		"METAMORPHOSIS", "MEND", "MEDITATE", "MEANINGFUL", "MASTER",
+		"MARVELOUS", "MAKE", "MAJESTIC", "MAINTAIN", "MAGNANIMOUS",
+		"LUMINOUS", "LUCRATIVE", "LUCIDITY", "LOYAL", "LOVELINESS", "LOVE",
+		"LIVELY", "LEGENDARY", "LEARN", "LEADER", "LAUGH", "KNOW", "KISS",
+		"KINDHEARTED", "KIND", "KEEN", "JUBILATION", "JOVIAL", "JOINED",
+		"JAZZED", "INVENTIVE", "INTUITIVE", "INTELLIGENT", "INTELLECTUAL",
+		"INSTINCT", "INSTANTANEOUS", "INSPIRE", "INNOVATE", "INNATE",
+		"INGENIOUS", "INDEPENDENT", "INCREASE", "INCOMPARABLE",
+		"IMPECCABLE", "IMMENSE", "IMMACULATE", "IMAGINATIVE", "IDEAL",
+		"HONORED", "HONEST", "HOLY", "HIGHEST", "HERE", "HELPFUL",
+		"HEAVENLY", "HEART", "HEALTHY", "HEALED", "HARMONY", "HAPPY",
+		"HANDSOME", "GUTSY", "GROW", "GRIN", "GREGARIOUS", "GREEN",
+		"GRATITUDE", "GRACIOUS", "GRACEFUL", "GRACE", "GORGEOUS", "GOOD",
+		"GLOW", "GLAD", "GIVE", "GIFTED", "GENUINE", "GENIUS", "GENEROUS",
+		"GATHER", "FUNNY", "FULL", "FRIENDLY", "FREEDOM", "FORTUNATE",
+		"FOLLOW", "FLOURISH", "FLEXIBLE", "FEAT", "FASCINATING", "FAMOUS",
+		"FAMILY", "FAITH", "EXULTANT", "EXTRAORDINARY", "EXQUISITE",
+		"EXPRESSIVE", "EXPRESS", "EXPLORE", "EXPAND", "EXHILARATING",
+		"EXCITED", "EVERYONE", "ESTEEM", "ESTABLISHED", "ESSENCE",
+		"EQUITABLE", "ENTIRELY", "ENTHUSE", "ENTERTAINING", "ENORMOUSLY",
+		"ENJOY", "ENGAGING", "ENERGY", "ENERGETIC", "ENDORSE", "ENCOURAGE",
+		"ENCOMPASSING", "EMPATHETIC", "EMBRACE", "ELOQUENT", "ELEGANCE",
+		"ELECTRIFYING", "EFFORTLESS", "EFFICIENT", "EFFERVESCENT",
+		"EFFECTIVE", "ECSTASY", "EASY", "EARNEST", "EAGER", "EACH",
+		"DOUBT", "DONATE", "DIVINE", "DISTINGUISHED", "DISCOVER",
+		"DISCIPLINED", "DIRECT", "DETERMINED", "DESERVING", "DELIGHT",
+		"DEDICATED", "DAZZLING", "CUTE", "CURE", "CULTIVATE", "CUDDLE",
+		"CREATE", "COURTEOUS", "COURAGEOUS", "COUPLED", "CORE", "COPIOUS",
+		"CONVICTION", "CONTENT", "CONSTANT", "CONSCIOUS", "CONNECT",
+		"CONGENIAL", "CONFIDENT", "COMRADESHIP", "COMPLETE",
+		"COMPASSIONATE", "COMPANIONSHIP", "COMMEND", "COMFORTABLE",
+		"CLOSENESS", "CLEVER", "CLEAN", "CLASSY", "CLARITY", "CHOOSE",
+		"CHERISH", "CHEERFUL", "CHARMING", "CHARITABLE", "CHARISMATIC",
+		"CHARACTER", "CHANGE", "CERTAIN", "CELEBRATE", "CARING",
+		"CAPTIVATING", "CALM", "BURGEON", "BUNCH", "BUBBLY", "BRILLIANT",
+		"BRIGHT", "BRAVE", "BOUNTY", "BOLD", "BLOOM", "BLISS", "BLESSED",
+		"BIGHEARTED", "BENEVOLENT", "BENEFIT", "BELIEVE", "BEAUTIFUL",
+		"BEAMING", "BASIC", "AUTHENTIC", "ATTRACTIVE", "ATTENTIVE",
+		"ASTUTE", "ASTOUNDING", "ASTONISH", "ASSERTIVE", "ARTISTIC",
+		"ARTICULATE", "APTITUDE", "APPROVE", "APPRECIATION", "ANSWER",
+		"ANIMATED", "AMUSING", "AMITY", "AMAZE", "ALTER", "ALLOW",
+		"ALLIANCE", "ALIVE", "AIRY", "AGREE", "AFFLUENT", "AFFIRMATIVE",
+		"AFFIRM", "ADVENTURE", "ADORED", "ADOPT", "ADMIRE", "ADJUST",
+		"ACUMEN", "ACTIVE", "ACHIEVEMENT", "ACCOMPLISHED", "ACCLAIMED",
+		"ACCEPT", "ABUNDANT", "ABSOLUTELY" };
+	
+	private static final int BACK_TO_HOME = 2;
+	private static final int GAME_OVER = 1;
+	private static final int GAME_COMPLETE = 3;
+	
+	private static final String KEY_SCORE = "score";
+	
+	private static int scoreMax = 2000;
+	
+	private int myScore = 0;
+	
+	private int highScores = 0;
+	
 	private Context mContext = this;
 
 	private WordDAO mWordDAO;
@@ -29,81 +125,18 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 	private WordsearchGridView mWordsearchGridView;
 	private GridView mGrvWord;
 	private WordAdapter mWordAdapter;
+	
+	private ProgressBar prgbTime;
+	private TextView tvScore;
 
 	private int mRows = 8;
 	private int mColumns = 8;
-
-	private static String[] mWordList = { "YES", "WONDROUS", "WONDERFUL",
-			"WONDER", "WITH", "WILLING", "WHOLE", "WELL", "WEALTHY", "VOYAGE",
-			"VIVACIOUS", "VITAL", "VISUALIZE", "VISION", "VIGOROUS", "VICTORY",
-			"VIBRANT", "VENERATED", "VARY", "VALUED", "UPBEAT", "UNWAVERING",
-			"UNUSUAL", "UNITY", "UNIQUE", "UNDERSTANDING", "TRUTH", "TRUSTFUL",
-			"TRIUMPH", "TRANSFORM", "TRANQUIL", "TOGETHER", "TODAY", "TIED",
-			"THRIVE", "THOROUGH", "THIS", "THERAPEUTIC", "THANKFUL", "TEAM",
-			"TAKE", "SYNCHRONIZED", "SUSTAIN", "SURE", "SUPPORT", "SUNNY",
-			"SUCCESS", "STYLE", "STUPENDOUS", "STUNNING", "STRONG", "STIRRING",
-			"STIR", "STEADY", "STABLE", "SPONTANEOUS", "SPLENDID", "SPIRIT",
-			"SPARKLING", "SOUL", "SOLUTION", "SMOOTH", "SMILE", "SMART",
-			"SINCERE", "SIMPLE", "SILENCE", "SHOWN", "SHINE", "SHIFT",
-			"SERENITY", "SENSATIONAL", "SENSATION", "SELFLESS", "SECURE",
-			"SAFE", "ROUSING", "ROBUST", "RICH", "REWARDING", "REVOLUTIONIZE",
-			"REVERED", "RESTORE", "RESPECT", "RESOURCES", "RESOUND",
-			"RESOLUTION", "REPLENISHED", "RENOWNED", "RENEW", "REMARKABLE",
-			"RELY", "RELAX", "REJUVENATE", "REJOICE", "REFRESH", "REFINEMENT",
-			"RECOGNIZED", "REALIZE", "READY", "QUIET", "QUICK-MINDED", "QUICK",
-			"QUEST", "PURPOSE", "PROUD", "PROTECT", "PROSPEROUS", "PROMINENT",
-			"PROJECT", "PRODUCTIVE", "PRINCIPLE", "PRETTY", "PREPARED",
-			"POWERFUL", "POSITIVE", "POPULAR", "POLISH", "POISE", "POETIC",
-			"PLETHORA", "PLENTY", "PLENTEOUS", "PLEASURE", "PHENOMENON",
-			"PERSISTENT", "PERFECT", "PERCEPTIVE", "PEACEFUL", "PEACE",
-			"PASSIONATE", "PARTY", "PARADISE", "ORIGINAL", "OPTIMISTIC",
-			"OPENHANDED", "OPEN", "NURTURE", "NOVEL", "NOURISH", "NATURE",
-			"MOVING", "MOTIVATE", "MOMENT", "MODIFY", "MISSION", "MIRACLE",
-			"METAMORPHOSIS", "MEND", "MEDITATE", "MEANINGFUL", "MASTER",
-			"MARVELOUS", "MAKE", "MAJESTIC", "MAINTAIN", "MAGNANIMOUS",
-			"LUMINOUS", "LUCRATIVE", "LUCIDITY", "LOYAL", "LOVELINESS", "LOVE",
-			"LIVELY", "LEGENDARY", "LEARN", "LEADER", "LAUGH", "KNOW", "KISS",
-			"KINDHEARTED", "KIND", "KEEN", "JUBILATION", "JOVIAL", "JOINED",
-			"JAZZED", "INVENTIVE", "INTUITIVE", "INTELLIGENT", "INTELLECTUAL",
-			"INSTINCT", "INSTANTANEOUS", "INSPIRE", "INNOVATE", "INNATE",
-			"INGENIOUS", "INDEPENDENT", "INCREASE", "INCOMPARABLE",
-			"IMPECCABLE", "IMMENSE", "IMMACULATE", "IMAGINATIVE", "IDEAL",
-			"HONORED", "HONEST", "HOLY", "HIGHEST", "HERE", "HELPFUL",
-			"HEAVENLY", "HEART", "HEALTHY", "HEALED", "HARMONY", "HAPPY",
-			"HANDSOME", "GUTSY", "GROW", "GRIN", "GREGARIOUS", "GREEN",
-			"GRATITUDE", "GRACIOUS", "GRACEFUL", "GRACE", "GORGEOUS", "GOOD",
-			"GLOW", "GLAD", "GIVE", "GIFTED", "GENUINE", "GENIUS", "GENEROUS",
-			"GATHER", "FUNNY", "FULL", "FRIENDLY", "FREEDOM", "FORTUNATE",
-			"FOLLOW", "FLOURISH", "FLEXIBLE", "FEAT", "FASCINATING", "FAMOUS",
-			"FAMILY", "FAITH", "EXULTANT", "EXTRAORDINARY", "EXQUISITE",
-			"EXPRESSIVE", "EXPRESS", "EXPLORE", "EXPAND", "EXHILARATING",
-			"EXCITED", "EVERYONE", "ESTEEM", "ESTABLISHED", "ESSENCE",
-			"EQUITABLE", "ENTIRELY", "ENTHUSE", "ENTERTAINING", "ENORMOUSLY",
-			"ENJOY", "ENGAGING", "ENERGY", "ENERGETIC", "ENDORSE", "ENCOURAGE",
-			"ENCOMPASSING", "EMPATHETIC", "EMBRACE", "ELOQUENT", "ELEGANCE",
-			"ELECTRIFYING", "EFFORTLESS", "EFFICIENT", "EFFERVESCENT",
-			"EFFECTIVE", "ECSTASY", "EASY", "EARNEST", "EAGER", "EACH",
-			"DOUBT", "DONATE", "DIVINE", "DISTINGUISHED", "DISCOVER",
-			"DISCIPLINED", "DIRECT", "DETERMINED", "DESERVING", "DELIGHT",
-			"DEDICATED", "DAZZLING", "CUTE", "CURE", "CULTIVATE", "CUDDLE",
-			"CREATE", "COURTEOUS", "COURAGEOUS", "COUPLED", "CORE", "COPIOUS",
-			"CONVICTION", "CONTENT", "CONSTANT", "CONSCIOUS", "CONNECT",
-			"CONGENIAL", "CONFIDENT", "COMRADESHIP", "COMPLETE",
-			"COMPASSIONATE", "COMPANIONSHIP", "COMMEND", "COMFORTABLE",
-			"CLOSENESS", "CLEVER", "CLEAN", "CLASSY", "CLARITY", "CHOOSE",
-			"CHERISH", "CHEERFUL", "CHARMING", "CHARITABLE", "CHARISMATIC",
-			"CHARACTER", "CHANGE", "CERTAIN", "CELEBRATE", "CARING",
-			"CAPTIVATING", "CALM", "BURGEON", "BUNCH", "BUBBLY", "BRILLIANT",
-			"BRIGHT", "BRAVE", "BOUNTY", "BOLD", "BLOOM", "BLISS", "BLESSED",
-			"BIGHEARTED", "BENEVOLENT", "BENEFIT", "BELIEVE", "BEAUTIFUL",
-			"BEAMING", "BASIC", "AUTHENTIC", "ATTRACTIVE", "ATTENTIVE",
-			"ASTUTE", "ASTOUNDING", "ASTONISH", "ASSERTIVE", "ARTISTIC",
-			"ARTICULATE", "APTITUDE", "APPROVE", "APPRECIATION", "ANSWER",
-			"ANIMATED", "AMUSING", "AMITY", "AMAZE", "ALTER", "ALLOW",
-			"ALLIANCE", "ALIVE", "AIRY", "AGREE", "AFFLUENT", "AFFIRMATIVE",
-			"AFFIRM", "ADVENTURE", "ADORED", "ADOPT", "ADMIRE", "ADJUST",
-			"ACUMEN", "ACTIVE", "ACHIEVEMENT", "ACCOMPLISHED", "ACCLAIMED",
-			"ACCEPT", "ABUNDANT", "ABSOLUTELY" };
+	
+	private int timeMax = 900000;
+	
+	private int timeCount = 0;
+	
+	private String TAG = "MainActivity";
 
 	private final Direction[] mDirections = Direction.values();
 	private boolean[][] mLock;
@@ -112,12 +145,30 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 	private char[][] mBoard;
 	private Set<Word> mSolution = new HashSet<Word>();
 	private Set<Word> mFoundWords = new HashSet<Word>();
+	
+	private boolean mActive = false;
+	private Handler mHander;
+	
+	private boolean isBack = false;
+	private boolean isComplete = false;
+
+	private SharedPreferencesUtil sharedPreferencesUtil;
+
+	private TextView tvHighScore;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		sharedPreferencesUtil = new SharedPreferencesUtil(mContext, KEY_SCORE);
+		
+		highScores = sharedPreferencesUtil.getInt(KEY_SCORE, 0);
+		
+		initHanlder();
 		initUI();
+		startTimeCount();
 	}
 
 	private void initUI() {
@@ -128,6 +179,15 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 
 		mWordList = mWordDAO.getRndWordEntity(categoryEntity.getId());
 
+		prgbTime = (ProgressBar)this.findViewById(R.id.prgbTime);
+		tvScore = (TextView)this.findViewById(R.id.tvScore);
+		tvHighScore = (TextView)this.findViewById(R.id.tvHighScore);
+		
+		tvHighScore.setText(""+highScores);
+		
+		tvScore.setText(""+myScore);
+		prgbTime.setProgress(100);
+		
 		mWordsearchGridView = (WordsearchGridView) this
 				.findViewById(R.id.grd_wordsearch);
 		mWordsearchGridView.setOnWordSelectedListener(this);
@@ -399,6 +459,138 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 	}
 
 	private void onPuzzleComplete() {
+		mHander.sendEmptyMessage(GAME_COMPLETE);
+	}
+	
+	private final Runnable mRunnable = new Runnable() {
+		public void run() {
+			if (mActive) {
+				if (timeCount < timeMax) {
+					timeCount = timeCount + 1000;
+
+					int percent =100 - ((timeCount * 100) / timeMax);
+					
+					if (percent % 2 == 0) {
+						prgbTime.setProgress(percent);
+
+					}
+					mHander.postDelayed(mRunnable, 1000);
+				}else{
+					mHander.sendEmptyMessage(GAME_OVER);
+				}
+			}else{
+				if(!isBack){
+					mHander.sendEmptyMessage(1);
+				}
+			}
+		}
+	};
+
+	private void startTimeCount() {
+		mActive = true;
+		if(mHander == null){
+			initHanlder();
+		}
+		mHander.post(mRunnable);
+	}
+	
+	private void initHanlder(){
+		mHander = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				int whatup = msg.what;
+				
+				switch (whatup) {
+					case GAME_OVER:
+						showDialog("Game Over", "Time to play this screen has expired!\nDo you want to play again?", "Back to Home", "Re-Play",new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								onBackPressed();
+							}
+						},new OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								dismissDialog();
+								
+								myScore = 0;
+								timeCount = 0;
+								prgbTime.setProgress(100);
+								tvScore.setText(""+myScore);
+								resetNewGame();
+								startTimeCount();
+							}
+						});
+						break;
+					case GAME_COMPLETE:
+						mActive = false;
+						highScores = sharedPreferencesUtil.getInt(KEY_SCORE, 0);
+						int countComple = (scoreMax *prgbTime.getProgress())/100;
+						
+						myScore = myScore + countComple;
+						
+						if(myScore > highScores){
+							sharedPreferencesUtil.put(KEY_SCORE, myScore);
+							
+							tvHighScore.setText(""+myScore);
+						}
+						
+						tvScore.setText(""+myScore);
+						
+						prgbTime.setProgress(100);
+						timeCount = 0;
+						startTimeCount();
+						
+						resetNewGame();
+						
+						
+						Toast.makeText(mContext, "Puzzle complete, well done!",
+								Toast.LENGTH_SHORT).show();
+						break;
+					default:
+						break;
+				}
+				
+				Log.d(TAG, "handleMessage Stop::::" + whatup);
+				
+				super.handleMessage(msg);
+			}
+		};
+	}
+
+	private Dialog dialog;
+	private void showDialog(String strTitle,String strContent,String strLeft,String strRight,OnClickListener onClickListenerLeft,OnClickListener onClickListenerRight){
+		dialog = new Dialog(mContext);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.dialog_layout);
+		
+		dialog.setCanceledOnTouchOutside(false);
+		
+		dialog.setOnCancelListener(new OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface arg0) {
+				dialog.dismiss();
+			}
+		});
+		
+		TextView tvTitle = (TextView)dialog.findViewById(R.id.tvTitle);
+		TextView tvContent = (TextView)dialog.findViewById(R.id.tvContent);
+		TextView tvLeft = (TextView)dialog.findViewById(R.id.tvLeft);
+		TextView tvRight = (TextView)dialog.findViewById(R.id.tvRight);
+		
+		tvTitle.setText(strTitle);
+		tvContent.setText(strContent);
+		tvLeft.setText(strLeft);
+		tvRight.setText(strRight);
+		
+		tvLeft.setOnClickListener(onClickListenerLeft);
+		
+		tvRight.setOnClickListener(onClickListenerRight);
+		
+		dialog.show();
+	}
+	
+	private void resetNewGame(){
 		AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
 		fadeOut.setFillAfter(true);
 		fadeOut.setDuration(500);
@@ -437,8 +629,36 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 				mGrvWord.startLayoutAnimation();
 			}
 		});
-
-		Toast.makeText(mContext, "Puzzle complete, well done!",
-				Toast.LENGTH_SHORT).show();
+	}
+	
+	private void dismissDialog(){
+		if(dialog != null && dialog.isShowing()){
+			dialog.dismiss();
+		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		isBack = true;
+		mActive = false;
+		showDialog("Game Note", "Do you want to cancel Game to go back to it?", "Yes", "No",new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MainActivity.this.finish();
+			}
+		},new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+				startTimeCount();
+				
+//				timeCount = 0;
+//				prgbTime.setProgress(100);
+//				resetNewGame();
+//				startTimeCount();
+			}
+		});
+//		super.onBackPressed();
+		
 	}
 }

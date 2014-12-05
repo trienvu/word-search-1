@@ -6,24 +6,68 @@
     android:orientation="vertical"
     tools:context="${relativePackage}.${activityClass}" >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="@dimen/play_margin_top_grid_top"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tvHighScoreTile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="High score:"
+            android:textColor="#d90e0e"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvHighScore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:text="12345"
+            android:textColor="#d90e0e"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:textColor="#3ec7f4"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/prgbTime"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="@dimen/play_width_process"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical"
+            android:progress="100"
+            android:progressDrawable="@drawable/progressbar2" />
+    </LinearLayout>
+
     <com.gtotek.wordsearch.WordsearchGridView
         android:id="@+id/grd_wordsearch"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/play_margin_left_right_grid_top"
-        android:layout_marginRight="@dimen/play_margin_left_right_grid_top"
-        android:layout_marginTop="@dimen/play_margin_top_grid_top" >
+        android:layout_marginRight="@dimen/play_margin_left_right_grid_top" >
     </com.gtotek.wordsearch.WordsearchGridView>
 
     <GridView
         android:id="@+id/grd_word_list"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/roundedrectangle1" 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/roundedrectangle1"
         android:numColumns="3"
         android:padding="@dimen/play_padd_grid_bottom"
-        android:scrollbars="vertical"
         android:verticalSpacing="@dimen/play_spacing_grid_bottom" >
     </GridView>
 
