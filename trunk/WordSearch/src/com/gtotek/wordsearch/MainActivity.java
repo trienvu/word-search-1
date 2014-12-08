@@ -132,7 +132,7 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 	private int mRows = 8;
 	private int mColumns = 8;
 	
-	private int timeMax = 900000;
+	private int timeMax = 240000;
 	
 	private int timeCount = 0;
 	
@@ -155,6 +155,7 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 	private SharedPreferencesUtil sharedPreferencesUtil;
 
 	private TextView tvHighScore;
+	private TextView tvHighScoreTile;
 	
 
 	@Override
@@ -181,10 +182,16 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 
 		prgbTime = (ProgressBar)this.findViewById(R.id.prgbTime);
 		tvScore = (TextView)this.findViewById(R.id.tvScore);
+		tvHighScoreTile = (TextView)this.findViewById(R.id.tvHighScoreTile);
 		tvHighScore = (TextView)this.findViewById(R.id.tvHighScore);
 		
-		tvHighScore.setText(""+highScores);
+		if(highScores <= 0){
+			tvHighScore.setVisibility(View.INVISIBLE);
+			tvHighScoreTile.setVisibility(View.INVISIBLE);
+			
+		}
 		
+		tvHighScore.setText(""+highScores);
 		tvScore.setText(""+myScore);
 		prgbTime.setProgress(100);
 		
@@ -531,7 +538,7 @@ public class MainActivity extends Activity implements OnWordSelectedListener {
 						
 						if(myScore > highScores){
 							sharedPreferencesUtil.put(KEY_SCORE, myScore);
-							
+							tvHighScore.setVisibility(View.VISIBLE);
 							tvHighScore.setText(""+myScore);
 						}
 						

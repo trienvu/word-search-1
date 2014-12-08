@@ -14,4 +14,9 @@
     <dimen name="play_padd_grid_bottom">7dp</dimen>
     
     <dimen name="play_width_process">120dp</dimen>
+    
+      <dimen name="play_text_size_max">20sp</dimen>
+    <dimen name="play_text_size_nomal">14sp</dimen>
+    <dimen name="play_text_size_small">12sp</dimen>
+    
 </resources>
