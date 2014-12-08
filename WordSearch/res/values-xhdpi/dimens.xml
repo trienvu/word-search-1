@@ -11,4 +11,8 @@
     
     <dimen name="play_spacing_grid_bottom">5dp</dimen>
     <dimen name="play_padd_grid_bottom">7dp</dimen>
+    
+     <dimen name="play_text_size_max">20sp</dimen>
+    <dimen name="play_text_size_nomal">15sp</dimen>
+    <dimen name="play_text_size_small">14sp</dimen>
 </resources>

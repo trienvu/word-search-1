@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="play_text_size_max">20sp</dimen>
+    <dimen name="play_text_size_nomal">17sp</dimen>
+    <dimen name="play_text_size_small">14sp</dimen>
+</resources>

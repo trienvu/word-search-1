@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- W720dp -->
+    <!-- Category -->
+    <dimen name="category_mar_top">500dp</dimen>
+    <dimen name="category_mar_ver_spacing">50dp</dimen>
+    
+    <!-- Play Game -->
+    <dimen name="play_margin_top_grid_top">180dp</dimen>
+    <dimen name="play_margin_left_right_grid_top">40dp</dimen>
+    
+    <dimen name="play_spacing_grid_bottom">5dp</dimen>
+    <dimen name="play_padd_grid_bottom">7dp</dimen>
+    
+     <dimen name="play_text_size_max">30sp</dimen>
+    <dimen name="play_text_size_nomal">23sp</dimen>
+    <dimen name="play_text_size_small">17sp</dimen>
+</resources>
