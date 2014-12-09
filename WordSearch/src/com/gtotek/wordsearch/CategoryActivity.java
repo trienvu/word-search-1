@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.gtotek.adapter.CategoryAdapter;
 import com.gtotek.adapter.dialog.DialogFAQ;
 import com.gtotek.dao.CategoryDAO;
@@ -24,7 +26,6 @@ public class CategoryActivity extends Activity {
 	private CategoryDAO mCategoryDAO;
 
 	private DialogFAQ dialogFAQ;
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,20 +33,26 @@ public class CategoryActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_category);
 		initUI();
-		
+
 		playMusic();
-		
+
 		dialogFAQ = new DialogFAQ(CategoryActivity.this);
 		dialogFAQ.setStrTitle("FAQ NOTE");
 		dialogFAQ.setStrFuntion("Search App from hilarious");
 		try {
-			dialogFAQ.setStrVersion("Version: "+this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
+			dialogFAQ.setStrVersion("Version: "
+					+ this.getPackageManager().getPackageInfo(
+							this.getPackageName(), 0).versionName);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
 		dialogFAQ.setStrOk("OK");
 		dialogFAQ.setStrNameDev("Deverloper: GTOTEK TEAM");
 		dialogFAQ.show();
+
+		AdView mAdView = (AdView) findViewById(R.id.adView);
+		AdRequest adRequest = new AdRequest.Builder().build();
+		mAdView.loadAd(adRequest);
 	}
 
 	private void initUI() {
@@ -74,45 +81,46 @@ public class CategoryActivity extends Activity {
 	};
 
 	private PlayMusic playMusic;
-	
-	private void playMusic(){
-		if(playMusic == null){
+
+	private void playMusic() {
+		if (playMusic == null) {
 			playMusic = new PlayMusic(CategoryActivity.this);
 		}
-//		final int sRandom = new Random().nextInt(SoundConfig.arrSound.length);
+		// final int sRandom = new
+		// Random().nextInt(SoundConfig.arrSound.length);
 		new Handler().post(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				playMusic.play();
 			}
 		});
-		
+
 	}
-	
-	private void stopMusic(){
-		if(playMusic != null && playMusic.getmMediaPlayer().isPlaying()){
+
+	private void stopMusic() {
+		if (playMusic != null && playMusic.getmMediaPlayer().isPlaying()) {
 			playMusic.getmMediaPlayer().stop();
 			playMusic.stop();
-		}else{
+		} else {
 			playMusic.stop();
 		}
 	}
+
 	@Override
 	public void onBackPressed() {
-//		super.onBackPressed();
+		// super.onBackPressed();
 		stopMusic();
 		CategoryActivity.this.finish();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(playMusic == null){
+		if (playMusic == null) {
 			playMusic = new PlayMusic(CategoryActivity.this);
 		}
-			playMusic();
+		playMusic();
 	}
-	
-	
+
 }
