@@ -3,5 +3,7 @@
 
     <string name="app_name">WordSearch</string>
     <string name="hello_world">Hello world!</string>
+    <string name="id_admob_banner">ca-app-pub-2661701834646758/4957360999</string>
+    <string name="id_admob_popup">ca-app-pub-2661701834646758/6434094194</string>
 
 </resources>
